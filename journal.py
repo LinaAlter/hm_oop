@@ -20,7 +20,7 @@ class Student:
 
     def rate_lect(self, lecturer, course, grade):
         
-        if isinstance(lecturer, Lecturer) and course in self.courses_in_progress and course in lecturer.courses_attached:
+        if isinstance(lecturer, Lecturer) and course in self.courses_in_progress or course in self.finished_courses and course in lecturer.courses_attached:
             if course in lecturer.grades:
                 lecturer.grades[course] += [grade]
             else:
@@ -52,7 +52,7 @@ class Reviewer(Mentor):
         
         
     def rate_hw(self, student, course, grade):
-           if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
+           if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress and course in student.finished_courses:
                if course in student.grades:
                    student.grades[course] += [grade]
                else:
@@ -88,25 +88,33 @@ lecturer_3 = Lecturer('Тимур', 'Анвартдинов')
 lecturer_3.courses_attached = ['ООП']
 # Student 1
 student_1 = Student('Надежда', 'Баскакова', 'женский')
-student_1.rate_lect(Lecturer, 'ООП', [7, 8, 9, 6, 10])
+student_1.rate_lect([lecturer_1, lecturer_2, lecturer_3], ['ООП','Git', 'Основы'], [10, 8, 6])
 student_1.courses_in_progress += ['ООП']
-student_1.finished_courses = ['Основы', 'Git']
+student_1.finished_courses += ['Основы']
+student_1.finished_courses += ['Git']
 # Student 2
 student_2 = Student('Даврон', 'Акрамов', 'мужской')
-student_2.rate_lect(Lecturer, ['Git', 'Основы'], [9, 9, 8, 6, 8])
+student_2.rate_lect([lecturer_1, lecturer_2], ['Git', 'Основы'], [8, 9])
 student_2.courses_in_progress += ['Git']
 student_2.finished_courses += ['Основы']
 # Student 3
 student_3 = Student ('Алиса', 'Нуриева', 'женский')
-student_3.rate_lect(Lecturer,'Основы', [4, 6, 8, 6, 9])
+student_3.rate_lect(lecturer_1, ['Основы'], 4)
 student_3.courses_in_progress += ['Основы']
-student_3.finished_courses = None
+student_3.finished_courses += ['нет завершенных курсов']
 
 
 reviewer = Reviewer('Александр', 'Бардин')
-reviewer.rate_hw(student_1, 'Fullstack', [5, 8, 9, 7, 9])
-reviewer.rate_hw(student_2, 'Frontend', [8, 6 , 9, 6, 8,])
-reviewer.rate_hw(student_3, 'Fullstack', [8, 9, 5, 8 ,7])
+reviewer.courses_attached = ['Основы', 'Git', 'ООП']
+reviewer.rate_hw(student_1, 'ООП', 8)
+reviewer.rate_hw(student_2, 'Git', 9)
+reviewer.rate_hw(student_3, 'Основы', 7)
 
+
+print(student_1)
 print(student_2)
+print(student_3)
 print(lecturer_1)
+print(lecturer_2)
+print(lecturer_3)
+print(reviewer)
